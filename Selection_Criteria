@@ -7,12 +7,14 @@ from
         i.inzedcode as ANZSIC_Code,
         i.insttype as install_type,
         i.inetwconn as Gas_Gate,
+        g.gxpdesc as gas_gate_description,
         i.ialtenergyco as retailer,
         i.ichgclass as charge_class,
         i.ialtlineco as network_company,
         i.iutilitytype as utility_type
     from 
     gentrack.install i
+    join gentrack.gxp g on g.gxpcode = i.inetwconn
         where i.ICP_IDENT is not null
         and i.iinst_status not in 'DED'
         and i.iutilitytype = 'G') Gas_Installs 
@@ -26,6 +28,6 @@ from
         join gentrack.gbreghist rh on rh.gbr$bregkey = br.gbb$regkey
             where i.iutilitytype = 'G'
             and gbr$reverse is null
-            group by i.icp_ident ) totals on totals.icp_ident = gas_installs.ICP
+        group by i.icp_ident ) totals on totals.icp_ident = gas_installs.ICP
         --order by install, gbr$cdate desc
     
